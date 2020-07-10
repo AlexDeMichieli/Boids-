@@ -10,7 +10,7 @@ class Boid{
 
     //steering force determines alignment and the ability to take other's direction
     //should be dat.gui
-    this.maxForce = 1
+    this.maxForce = 0.2
 
     //should be dat.gui
     this.maxSpeed = 4
@@ -20,6 +20,9 @@ class Boid{
 update(){
     this.position.add(this.velocity)
     this.velocity.add(this.acceleration)
+    this.velocity.limit(this.maxSpeed)
+    this.acceleration.mult(0)
+
 }
 
 //1st of 3 important key rules. Alignment.
@@ -55,8 +58,43 @@ align(boids){
 
 //steering value returned by previous function added to acceleration
 flock(boids){
-    this.acceleration = this.align(boids)
 
+    //Alignment
+    let alignment = this.align(boids)
+    this.acceleration.add(alignment)
+
+    //Cohesion
+    let cohesion = this.cohesion(boids)
+    this.acceleration.add(cohesion)
+}
+
+//Chesion: steer to move toward the average position of local flockmates
+cohesion(boids){
+
+    //should be dat.gui = Gravity.
+    let perception = 50
+    let total = 0
+    let avgLocation = createVector()
+    for (let neighbours of boids){
+        let distance = dist(this.position.x, 
+                            this.position.y, 
+                            neighbours.position.x, 
+                            neighbours.position.y
+                            )
+        if(neighbours != this && distance < perception) {
+            avgLocation.add(neighbours.position)
+            total ++
+        }
+    }
+    if(total > 0){
+        //average location in this case
+        avgLocation.div(total)
+        avgLocation.sub(this.position)
+        avgLocation.setMag(this.maxSpeed)
+        avgLocation.sub(this.velocity)
+        avgLocation.limit(this.maxForce)
+    }
+    return avgLocation
 }
 
 edges(){
