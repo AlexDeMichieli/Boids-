@@ -9,7 +9,7 @@ function setup() {
 	}
 	// flock.push(new Boid())
 
-	frameRate(25);
+	frameRate(60);
 
 }
 
@@ -17,6 +17,7 @@ function draw() {
 background(51)
 
 for (let boid of flock){
+	boid.flock(flock)
 	boid.show()
 	boid.update()
 }
