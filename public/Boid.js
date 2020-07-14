@@ -1,3 +1,5 @@
+
+
 class Boid{
     constructor(){
     
@@ -22,14 +24,14 @@ update(){
     this.velocity.add(this.acceleration)
     this.velocity.limit(this.maxSpeed)
     this.acceleration.mult(0)
-
 }
 
 //1st of 3 important key rules. Alignment.
 //Steer towards the average heading of local flockmates 
 //the boid alignes to nearby flockmates. It has a limited range of visibility.
 align(boids){
-    let perception = 50
+//should be slider/dat.gui = alignment.
+    let perception = valueSliders.alignment
     let total = 0
 
     //the vector provides a number to velocity, which will be the average of all velocities,
@@ -59,20 +61,30 @@ align(boids){
 //steering value returned by previous function added to acceleration
 flock(boids){
 
-    //Alignment
+    // Alignment
     let alignment = this.align(boids)
     this.acceleration.add(alignment)
 
     //Cohesion
     let cohesion = this.cohesion(boids)
     this.acceleration.add(cohesion)
+
+    //Separation
+    let seaparation = this.separation(boids)
+    this.acceleration.add(seaparation)
+
+
+    // sliders
+    // console.log(valueSliders.alignment);
+    cohesion.mult(valueSliders.cohesion);
+    // seaparation.mult(valueSliders.alignment);
 }
 
 //Chesion: steer to move toward the average position of local flockmates
 cohesion(boids){
 
-    //should be dat.gui = Gravity.
-    let perception = 50
+    //should be slider/dat.gui = cohesion.
+    let perception = valueSliders.cohesion
     let total = 0
     let avgLocation = createVector()
     for (let neighbours of boids){
@@ -96,6 +108,42 @@ cohesion(boids){
     }
     return avgLocation
 }
+
+//steer away to avoid crowding
+//the magnitude of vector is inversely proportional to the distance of the local flockmate
+separation(boids){
+
+    let perception = valueSliders.separation
+    let total = 0
+    let avgLocation = createVector()
+    for (let neighbours of boids){
+        let distance = dist(this.position.x, 
+                            this.position.y, 
+                            neighbours.position.x, 
+                            neighbours.position.y
+                            )
+        if(neighbours != this && distance < perception) {
+            let difference = p5.Vector.sub(this.position, neighbours.position)
+            //the difference is inverseley proportional to the distance. The farther away, the lower the magnitude.
+            difference.div(distance)
+            avgLocation.add(difference)
+            total ++
+        }
+    }
+    if(total > 0){
+        //average location in this case
+        avgLocation.div(total)
+        avgLocation.setMag(this.maxSpeed)
+        avgLocation.sub(this.velocity)
+        avgLocation.limit(this.maxForce)
+    }
+    return avgLocation
+
+}
+
+
+
+
 
 edges(){
     if(this.position.x > width) {
