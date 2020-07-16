@@ -5,20 +5,17 @@ class Boid{
     
     //Defines initial positon of the boid
     // this.position = createVector(windowWidth/2, windowHeight/2 )
-    this.position = createVector(random(width), random(height) )
+    this.position = createVector(windowWidth/2, windowHeight/2 )
     this.velocity = p5.Vector.random2D()
     this.velocity.setMag(random(2, 4))
     this.acceleration = createVector()
 
     //steering force determines alignment and the ability to take other's direction
-    //should be dat.gui
     this.maxForce = 0.2
-
-    //should be dat.gui
     this.maxSpeed = 4
     }
 
-//the Boid updates its positon bases on velocity and accelleration
+//the Boid updates its positon based on velocity and accelleration
 update(){
     this.position.add(this.velocity)
     this.velocity.add(this.acceleration)
@@ -72,12 +69,6 @@ flock(boids){
     //Separation
     let seaparation = this.separation(boids)
     this.acceleration.add(seaparation)
-
-
-    // sliders
-    // console.log(valueSliders.alignment);
-    cohesion.mult(valueSliders.cohesion);
-    // seaparation.mult(valueSliders.alignment);
 }
 
 //Chesion: steer to move toward the average position of local flockmates
@@ -141,10 +132,6 @@ separation(boids){
 
 }
 
-
-
-
-
 edges(){
     if(this.position.x > width) {
         this.position.x = 0
@@ -160,8 +147,9 @@ edges(){
 }
     //draws the flock inside the canvas. TO STYLE
     show(){
-        strokeWeight(4)
-        stroke(255);
+        strokeWeight(1)
+        fill(0)
+        // stroke(255);
         push();
         translate(this.position.x, this.position.y);
         rotate(this.velocity.heading());
@@ -169,5 +157,18 @@ edges(){
         pop();
     
     }
+
+    check(obstacle) {
+        if (dist(this.position.x, this.position.y, obstacle.x, obstacle.y) < obstacle.r) {
+          let target = createVector(obstacle.x, obstacle.y);
+          let desire = p5.Vector.sub(target, this.position);
+          desire.setMag(this.maxSpeed);
+          let steer = p5.Vector.sub(desire, this.velocity);
+          steer.limit(this.maxSpeed);
+          steer.mult(-1);
+          this.velocity = steer;
+        }
+      }
+    
 }
 
