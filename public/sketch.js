@@ -28,7 +28,7 @@ function setup() {
         pushBoid();
 	}
 
-	for (let i = 0; i < 10; i++) {
+	for (let i = 0; i < 2; i++) {
 		predator.push(new Predator())
 	}
 
@@ -53,7 +53,7 @@ for (let killer of predator){
 	killer.display()
 	killer.update()
 	killer.edges()
-
+	// killer.lockPredator()
 
 }
 
