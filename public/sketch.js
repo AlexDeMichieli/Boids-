@@ -1,7 +1,8 @@
 const flock = [];
-const predator = []
 
 let valueSliders
+let obstacle;
+
 
 function Controls() {
 	this.alignment = 50;
@@ -23,39 +24,37 @@ function setup() {
 	gui.add(valueSliders, 'separation', 0, 50).step(1);
 	gui.add(valueSliders, 'birds', 0, 200).step(1);
 
+	obstacle = new Obstacle(width/2,height/2);
+
 	//flock.push(new Boid());
 	for (let i = 0; i < valueSliders.birds; i++) {
         pushBoid();
-	}
-
-	for (let i = 0; i < 2; i++) {
-		predator.push(new Predator())
 	}
 
 	frameRate(60);
 }
 
 function draw() {
+
 background(255)
+
+if(mouseIsPressed){
+	obstacle.setPosition(mouseX, mouseY);
+}
 
 
 for (let boid of flock){
 	//alignment
-
 	boid.flock(flock)
 	boid.show()
 	boid.update()
 	boid.edges()
+	boid.check(obstacle);
+
+	obstacle.show();
+	// obstacle.setPosition(mouseX, mouseY);
 }
 
-for (let killer of predator){
-	//alignment
-	killer.display()
-	killer.update()
-	killer.edges()
-	// killer.lockPredator()
-
-}
 
     // Adjust the amount of boids on screen according to the slider value
     let maxBoids = valueSliders.birds;
@@ -76,3 +75,10 @@ function pushBoid() {
     flock.push(boid); // Add the new boid to the flock
 }
 
+
+
+// function mousePressed() {
+// 	obstacle.setPosition(mouseX, mouseY);
+
+// 	// prevent default
+//   }

@@ -132,10 +132,6 @@ separation(boids){
 
 }
 
-
-
-
-
 edges(){
     if(this.position.x > width) {
         this.position.x = 0
@@ -161,5 +157,18 @@ edges(){
         pop();
     
     }
+
+    check(obstacle) {
+        if (dist(this.position.x, this.position.y, obstacle.x, obstacle.y) < obstacle.r) {
+          let target = createVector(obstacle.x, obstacle.y);
+          let desire = p5.Vector.sub(target, this.position);
+          desire.setMag(this.maxSpeed);
+          let steer = p5.Vector.sub(desire, this.velocity);
+          steer.limit(this.maxSpeed);
+          steer.mult(-1);
+          this.velocity = steer;
+        }
+      }
+    
 }
 
