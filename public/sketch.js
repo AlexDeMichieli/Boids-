@@ -51,14 +51,15 @@ function draw() {
 background(255)
 
   if(valueSliders.obstacle){
-if(mouseIsPressed){
-  addCircle();
-}
+	if(mouseIsPressed){
+  		addCircle();
+	}
   }
 
 for (let boid of flock){
-	//alignment
+	//alignment+cohesion+separation
 	boid.flock(flock)
+	
 	boid.show()
 	boid.update()
 	boid.edges()
@@ -67,7 +68,7 @@ for (let boid of flock){
    if(valueSliders.obstacle){
 	obstacle.show();
 	// obstacle.setPosition(mouseX, mouseY);
-}
+	}
 }
 
     // Adjust the amount of boids on screen according to the slider value

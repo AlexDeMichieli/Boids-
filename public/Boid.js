@@ -27,10 +27,10 @@ update(){
 //Steer towards the average heading of local flockmates 
 //the boid alignes to nearby flockmates. It has a limited range of visibility.
 align(boids){
-//should be slider/dat.gui = alignment.
+
     let perception = valueSliders.alignment
     let total = 0
-
+    
     //the vector provides a number to velocity, which will be the average of all velocities,
     //which is added up and divided by the total
     let steering = createVector()
@@ -46,12 +46,13 @@ align(boids){
         }
     }
     if(total > 0){
+        //desired velocity divided by the total, which averages it out
         steering.div(total)
         steering.setMag(this.maxSpeed)
         steering.sub(this.velocity)
         steering.limit(this.maxForce)
     }
-    //steering is the desired velocity - current velocity
+    //steering is the desired velocity (which is the average) - current velocity
     return steering
 }
 
@@ -74,7 +75,6 @@ flock(boids){
 //Chesion: steer to move toward the average position of local flockmates
 cohesion(boids){
 
-    //should be slider/dat.gui = cohesion.
     let perception = valueSliders.cohesion
     let total = 0
     let avgLocation = createVector()
@@ -145,7 +145,7 @@ edges(){
     }
 
 }
-    //draws the flock inside the canvas. TO STYLE
+    //draws the flock inside the canvas
     show(){
         strokeWeight(1)
         fill(0)
