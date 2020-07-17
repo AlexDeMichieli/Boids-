@@ -10,7 +10,7 @@ Use 'Npm start' to start. Use the sliders to play with alignment, separation and
 
 ## Deployment
 
-Deployed on Heroku at.
+Deployed on Heroku at https://flocking.herokuapp.com/
 
 ## Built With
 
