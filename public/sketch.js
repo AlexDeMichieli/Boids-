@@ -10,10 +10,18 @@ function Controls() {
 	this.separation = 50;
 	this.speed = 4
 	this.birds = 50
+    this.obstacle = false
+    this.radius = 20
+}
+
+  function addCircle(){
+    	obstacle = new Obstacle(width/2,height/2);
+        obstacle.setPosition(mouseX, mouseY);        
 }
 
 function setup() {
-	
+    
+
 	createCanvas(windowWidth, windowHeight);
 	
 	let gui = new dat.GUI();
@@ -23,6 +31,9 @@ function setup() {
 	gui.add(valueSliders, 'cohesion', 0, 50).step(1);
 	gui.add(valueSliders, 'separation', 0, 50).step(1);
 	gui.add(valueSliders, 'birds', 0, 200).step(1);
+  	gui.add(valueSliders, 'obstacle');
+  	gui.add(valueSliders, 'radius', 0, 200).step(1);
+
 
 	obstacle = new Obstacle(width/2,height/2);
 
@@ -35,13 +46,15 @@ function setup() {
 }
 
 function draw() {
+  
 
 background(255)
 
+  if(valueSliders.obstacle){
 if(mouseIsPressed){
-	obstacle.setPosition(mouseX, mouseY);
+  addCircle();
 }
-
+  }
 
 for (let boid of flock){
 	//alignment
@@ -51,10 +64,11 @@ for (let boid of flock){
 	boid.edges()
 	boid.check(obstacle);
 
+   if(valueSliders.obstacle){
 	obstacle.show();
 	// obstacle.setPosition(mouseX, mouseY);
 }
-
+}
 
     // Adjust the amount of boids on screen according to the slider value
     let maxBoids = valueSliders.birds;
@@ -74,11 +88,3 @@ function pushBoid() {
     let boid = new Boid(); // Create a new boid
     flock.push(boid); // Add the new boid to the flock
 }
-
-
-
-// function mousePressed() {
-// 	obstacle.setPosition(mouseX, mouseY);
-
-// 	// prevent default
-//   }
